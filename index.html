@@ -26,6 +26,7 @@
       }
       a:hover { color: #89ead3; }
       a:focus-visible { outline: 2px solid #89ead3; outline-offset: 6px; }
+      button { position: fixed; right: 16px; bottom: 16px; width: 36px; height: 36px; border: 1px solid #38504b; border-radius: 50%; background: #080b0d; color: #89ead3; cursor: pointer; font-size: 16px; }
     </style>
   </head>
   <body>
@@ -33,10 +34,12 @@
     <main>
       <a href="mailto:zhong@zhongchen.ai">zhong@zhongchen.ai</a>
     </main>
+    <button type="button" aria-label="Pause background animation" title="Pause background animation">&#10074;&#10074;</button>
     <script>
       const canvas = document.querySelector('canvas');
       const ctx = canvas.getContext('2d');
-      const motion = matchMedia('(prefers-reduced-motion: reduce)');
+      const toggle = document.querySelector('button');
+      let paused = false;
       let width = 0, height = 0, phase = 0, previous = 0, frame = 0;
 
       function draw() {
@@ -91,12 +94,18 @@
       function syncMotion() {
         cancelAnimationFrame(frame);
         previous = 0;
-        if (!motion.matches && !document.hidden && ctx) frame = requestAnimationFrame(animate);
+        if (!paused && !document.hidden && ctx) frame = requestAnimationFrame(animate);
         else draw();
       }
       addEventListener('resize', resize);
       document.addEventListener('visibilitychange', syncMotion);
-      motion.addEventListener('change', syncMotion);
+      toggle.addEventListener('click', () => {
+        paused = !paused;
+        toggle.textContent = paused ? '\u25b6' : '\u275a\u275a';
+        toggle.title = paused ? 'Play background animation' : 'Pause background animation';
+        toggle.setAttribute('aria-label', toggle.title);
+        syncMotion();
+      });
       resize();
       syncMotion();
     </script>

@@ -5,38 +5,487 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Zhong Chen</title>
     <style>
-      body { margin: 0; background: #080b0d; font-family: Arial, Helvetica, sans-serif; }
-      canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+      :root {
+        color-scheme: dark;
+        --bg: #080b0d;
+        --text: #f0f7f5;
+        --line: rgba(240, 247, 245, 0.84);
+        --soft-line: rgba(174, 184, 196, 0.78);
+        --ice: #55cfff;
+        --ice-soft: rgba(85, 207, 255, 0.24);
+        --mango: #ffd247;
+        --leaf: #74dd78;
+        --heat: #ff755f;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .orbital-background {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
       main {
         position: relative;
         display: grid;
+        grid-template-columns: minmax(0, 7fr) minmax(260px, 3fr);
+        align-items: center;
         min-height: 100vh;
         min-height: 100svh;
-        place-items: center;
-        padding: 24px;
-        box-sizing: border-box;
+        padding: clamp(24px, 6vw, 72px);
+        gap: clamp(24px, 5vw, 72px);
+        overflow: hidden;
       }
+
+      .identity {
+        display: flex;
+        align-items: center;
+        min-height: 44vh;
+      }
+
       a {
-        color: #f0f7f5;
-        font-size: 20px;
+        color: var(--text);
+        font-size: clamp(20px, 2.4vw, 34px);
         line-height: 1.5;
         overflow-wrap: anywhere;
-        text-underline-offset: 4px;
-        text-shadow: 0 2px 12px #080b0d, 0 0 24px #080b0d;
+        text-underline-offset: 5px;
+        text-shadow: 0 2px 12px var(--bg), 0 0 24px var(--bg);
       }
+
       a:hover { color: #89ead3; }
       a:focus-visible { outline: 2px solid #89ead3; outline-offset: 6px; }
-      button { position: fixed; right: 16px; bottom: 16px; width: 36px; height: 36px; border: 1px solid #38504b; border-radius: 50%; background: #080b0d; color: #89ead3; cursor: pointer; font-size: 16px; }
+
+      .cold-chain-panel {
+        position: relative;
+        min-height: min(72vh, 620px);
+        overflow: hidden;
+        border-left: 1px solid rgba(240, 247, 245, 0.08);
+        background:
+          radial-gradient(circle at 50% 42%, var(--ice-soft), transparent 58%),
+          linear-gradient(180deg, rgba(240, 247, 245, 0.035), rgba(240, 247, 245, 0));
+        isolation: isolate;
+      }
+
+      .cold-chain-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, var(--bg), rgba(8, 11, 13, 0) 18%),
+          linear-gradient(180deg, var(--bg), rgba(8, 11, 13, 0) 12%, rgba(8, 11, 13, 0) 84%, var(--bg));
+      }
+
+      .cold-chain-animation {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        padding: 8% 4% 13%;
+        opacity: 0;
+        animation-duration: 30s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+      }
+
+      .scene svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .scene-title {
+        position: absolute;
+        left: 6%;
+        right: 6%;
+        bottom: 7%;
+        z-index: 3;
+        color: var(--text);
+        font-size: clamp(13px, 1.1vw, 17px);
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.08em;
+        text-align: center;
+        text-shadow: 0 2px 10px var(--bg);
+      }
+
+      .scene-title .ice { color: var(--ice); }
+      .scene-title .mango-word { color: var(--mango); }
+      .scene-title .heat { color: var(--heat); }
+
+      .line,
+      .soft-line,
+      .ice-line,
+      .heat-line {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .line { stroke: var(--line); stroke-width: 4; }
+      .soft-line { stroke: var(--soft-line); stroke-width: 3; }
+      .ice-line { stroke: var(--ice); stroke-width: 4; }
+      .heat-line { stroke: var(--heat); stroke-width: 4; }
+      .mango { fill: var(--mango); stroke: #111417; stroke-width: 4; }
+      .leaf { fill: var(--leaf); stroke: #111417; stroke-width: 3; }
+      .eye { fill: #111417; }
+      .mouth { fill: none; stroke: #111417; stroke-width: 3; stroke-linecap: round; }
+
+      .scene-harvest { animation-name: sceneHarvest; }
+      .scene-precool { animation-name: scenePrecool; }
+      .scene-transport { animation-name: sceneTransport; }
+      .scene-unload { animation-name: sceneUnload; }
+      .scene-break { animation-name: sceneBreak; }
+      .scene-finish { animation-name: sceneFinish; }
+
+      @keyframes sceneHarvest {
+        0%, 14% { opacity: 1; }
+        17%, 100% { opacity: 0; }
+      }
+
+      @keyframes scenePrecool {
+        0%, 15% { opacity: 0; }
+        18%, 29% { opacity: 1; }
+        32%, 100% { opacity: 0; }
+      }
+
+      @keyframes sceneTransport {
+        0%, 30% { opacity: 0; }
+        33%, 54% { opacity: 1; }
+        57%, 100% { opacity: 0; }
+      }
+
+      @keyframes sceneUnload {
+        0%, 55% { opacity: 0; }
+        58%, 72% { opacity: 1; }
+        75%, 100% { opacity: 0; }
+      }
+
+      @keyframes sceneBreak {
+        0%, 73% { opacity: 0; }
+        76%, 88% { opacity: 1; }
+        91%, 100% { opacity: 0; }
+      }
+
+      @keyframes sceneFinish {
+        0%, 89% { opacity: 0; }
+        92%, 98% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+
+      .mango-drop { animation: mangoDrop 30s infinite ease-in-out; transform-origin: center; }
+      @keyframes mangoDrop {
+        0%, 3% { transform: translateY(-36px) rotate(-6deg); }
+        8%, 14%, 100% { transform: translateY(122px) rotate(4deg); }
+      }
+
+      .farmer-arm { animation: armMove 30s infinite ease-in-out; transform-origin: 224px 222px; }
+      @keyframes armMove {
+        0%, 4% { transform: rotate(15deg); }
+        8%, 100% { transform: rotate(-17deg); }
+      }
+
+      .cold-wave {
+        stroke-dasharray: 14 16;
+        animation: coldFlow 1.05s linear infinite;
+      }
+
+      @keyframes coldFlow { to { stroke-dashoffset: -60; } }
+
+      .cool-mango,
+      .hero-mango {
+        animation: floatMango 1.6s ease-in-out infinite;
+        transform-origin: center;
+      }
+
+      @keyframes floatMango {
+        50% { transform: translateY(-18px) rotate(4deg); }
+      }
+
+      .snowflake {
+        stroke: var(--ice);
+        stroke-width: 3;
+        fill: none;
+        transform-origin: center;
+        animation: snowSpin 2.8s linear infinite;
+      }
+
+      @keyframes snowSpin { to { transform: rotate(360deg); } }
+
+      .truck { animation: truckDrive 30s infinite ease-in-out; }
+      @keyframes truckDrive {
+        0%, 33% { transform: translateX(-148px); }
+        40%, 52% { transform: translateX(14px); }
+        56%, 100% { transform: translateX(172px); }
+      }
+
+      .road-line {
+        stroke-dasharray: 38 42;
+        animation: road 1s linear infinite;
+      }
+
+      @keyframes road { to { stroke-dashoffset: -80; } }
+
+      .temp-check {
+        animation: tempPulse 0.95s ease-in-out infinite;
+        transform-origin: center;
+      }
+
+      @keyframes tempPulse {
+        50% { opacity: 0.5; transform: scale(1.04); }
+      }
+
+      .worker-left { animation: workerLeft 0.55s ease-in-out infinite alternate; }
+      .worker-right { animation: workerRight 0.55s ease-in-out infinite alternate; }
+      @keyframes workerLeft { to { transform: translateX(14px) rotate(2deg); } }
+      @keyframes workerRight { to { transform: translateX(-14px) rotate(-2deg); } }
+
+      .sun {
+        animation: sunPulse 0.85s ease-in-out infinite;
+        transform-origin: center;
+      }
+
+      @keyframes sunPulse { 50% { transform: scale(1.08); } }
+
+      .bad-mango {
+        animation: spoil 1.15s ease-in-out infinite alternate;
+        transform-origin: center;
+      }
+
+      @keyframes spoil {
+        to { transform: rotate(5deg) translateY(6px); opacity: 0.7; }
+      }
+
+      .motion-paused .scene,
+      .motion-paused .mango-drop,
+      .motion-paused .farmer-arm,
+      .motion-paused .cold-wave,
+      .motion-paused .cool-mango,
+      .motion-paused .hero-mango,
+      .motion-paused .snowflake,
+      .motion-paused .truck,
+      .motion-paused .road-line,
+      .motion-paused .temp-check,
+      .motion-paused .worker-left,
+      .motion-paused .worker-right,
+      .motion-paused .sun,
+      .motion-paused .bad-mango {
+        animation-play-state: paused;
+      }
+
+      button {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 5;
+        width: 36px;
+        height: 36px;
+        border: 1px solid #38504b;
+        border-radius: 50%;
+        background: var(--bg);
+        color: #89ead3;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:focus-visible { outline: 2px solid #89ead3; outline-offset: 4px; }
+
+      @media (max-width: 780px) {
+        main {
+          grid-template-columns: 1fr;
+          grid-template-rows: minmax(38vh, auto) minmax(360px, 44vh);
+          gap: 12px;
+          padding: 24px;
+          place-items: stretch;
+        }
+
+        .identity {
+          align-items: end;
+          justify-content: center;
+          min-height: 32vh;
+          text-align: center;
+        }
+
+        .cold-chain-panel {
+          min-height: 360px;
+          border-left: 0;
+          border-top: 1px solid rgba(240, 247, 245, 0.08);
+        }
+
+        .cold-chain-panel::before {
+          background:
+            linear-gradient(180deg, var(--bg), rgba(8, 11, 13, 0) 18%, rgba(8, 11, 13, 0) 82%, var(--bg));
+        }
+      }
+
     </style>
   </head>
   <body>
-    <canvas aria-hidden="true"></canvas>
+    <canvas class="orbital-background" aria-hidden="true"></canvas>
     <main>
-      <a href="mailto:zhong@zhongchen.ai">zhong@zhongchen.ai</a>
+      <div class="identity">
+        <a href="mailto:zhong@zhongchen.ai">zhong@zhongchen.ai</a>
+      </div>
+
+      <aside class="cold-chain-panel" aria-label="Mango cold-chain animation">
+        <div class="cold-chain-animation" aria-hidden="true">
+          <section class="scene scene-harvest">
+            <svg viewBox="0 0 360 520" role="img">
+              <path class="soft-line" d="M74 406 C88 338 86 266 118 206 C141 162 186 137 230 116" />
+              <path class="line" d="M113 220 C82 210 60 182 64 151 C96 161 113 181 113 220Z" />
+              <path class="line" d="M171 161 C146 128 151 91 184 70 C198 103 195 136 171 161Z" />
+              <path class="line" d="M215 128 C226 93 255 75 291 82 C279 116 253 133 215 128Z" />
+              <circle class="mango" cx="225" cy="170" r="23" />
+              <ellipse class="leaf" cx="243" cy="145" rx="17" ry="8" transform="rotate(-25 243 145)" />
+              <g class="mango-drop">
+                <ellipse class="mango" cx="228" cy="160" rx="29" ry="36" transform="rotate(18 228 160)" />
+                <ellipse class="leaf" cx="249" cy="121" rx="17" ry="8" transform="rotate(-18 249 121)" />
+                <circle class="eye" cx="218" cy="158" r="3" />
+                <circle class="eye" cx="237" cy="156" r="3" />
+                <path class="mouth" d="M220 174 Q229 181 238 172" />
+              </g>
+              <circle class="line" cx="110" cy="308" r="22" />
+              <path class="line" d="M110 330 L100 395 M110 330 L139 388 M94 353 L64 377" />
+              <path class="farmer-arm line" d="M122 354 C158 333 184 305 209 274" />
+              <path class="soft-line" d="M66 420 C128 438 212 438 294 420" />
+            </svg>
+            <div class="scene-title"><span class="mango-word">HARVEST</span> STARTS THE JOURNEY</div>
+          </section>
+
+          <section class="scene scene-precool">
+            <svg viewBox="0 0 360 520" role="img">
+              <rect class="line" x="61" y="111" width="238" height="288" rx="20" />
+              <path class="soft-line" d="M97 161 H263 M97 220 H263 M97 279 H263" />
+              <g class="cool-mango">
+                <ellipse class="mango" cx="181" cy="253" rx="55" ry="70" transform="rotate(12 181 253)" />
+                <ellipse class="leaf" cx="215" cy="181" rx="27" ry="12" transform="rotate(-24 215 181)" />
+                <circle class="eye" cx="163" cy="251" r="5" />
+                <circle class="eye" cx="195" cy="248" r="5" />
+                <path class="mouth" d="M164 278 Q181 290 199 276" />
+              </g>
+              <path class="ice-line cold-wave" d="M69 182 C115 155 146 184 181 160 C219 135 247 165 293 138" />
+              <path class="ice-line cold-wave" d="M61 326 C105 296 145 325 184 298 C223 271 255 300 303 271" />
+              <g class="snowflake">
+                <path d="M108 92 V132 M88 112 H128 M94 98 L122 126 M122 98 L94 126" />
+              </g>
+              <g class="snowflake" style="animation-delay: -1.3s;">
+                <path d="M268 360 V400 M248 380 H288 M254 366 L282 394 M282 366 L254 394" />
+              </g>
+            </svg>
+            <div class="scene-title"><span class="ice">PRE-COOLED</span> BEFORE MOVING</div>
+          </section>
+
+          <section class="scene scene-transport">
+            <svg viewBox="0 0 360 520" role="img">
+              <path class="soft-line road-line" d="M25 388 H335" />
+              <g class="truck">
+                <rect class="line" x="64" y="204" width="178" height="104" rx="12" />
+                <path class="line" d="M242 237 H286 L316 273 V308 H242Z" />
+                <path class="ice-line cold-wave" d="M86 234 C118 211 146 237 178 216 C203 199 221 210 237 197" />
+                <ellipse class="mango" cx="149" cy="262" rx="31" ry="39" transform="rotate(12 149 262)" />
+                <ellipse class="leaf" cx="169" cy="220" rx="15" ry="7" transform="rotate(-23 169 220)" />
+                <circle class="eye" cx="138" cy="261" r="3" />
+                <circle class="eye" cx="156" cy="259" r="3" />
+                <path class="mouth" d="M139 277 Q149 284 160 276" />
+                <circle class="line" cx="110" cy="319" r="20" />
+                <circle class="line" cx="273" cy="319" r="20" />
+              </g>
+              <g class="temp-check">
+                <rect class="ice-line" x="114" y="103" width="133" height="47" rx="23" />
+                <path class="ice-line" d="M139 126 H189" />
+                <path class="ice-line" d="M211 126 l10 10 l21 -25" />
+              </g>
+            </svg>
+            <div class="scene-title"><span class="ice">TEMPERATURE</span> MONITORED ALL THE WAY</div>
+          </section>
+
+          <section class="scene scene-unload">
+            <svg viewBox="0 0 360 520" role="img">
+              <rect class="line" x="78" y="137" width="206" height="116" rx="14" />
+              <path class="ice-line cold-wave" d="M103 171 C134 151 158 174 188 156 C220 138 240 160 263 146" />
+              <path class="line" d="M89 253 H270 L291 314 H67Z" />
+              <g class="worker-left">
+                <circle class="line" cx="82" cy="324" r="15" />
+                <path class="line" d="M82 339 L76 386 M82 350 L113 365 M75 385 L57 416 M76 386 L100 414" />
+              </g>
+              <g class="worker-right">
+                <circle class="line" cx="278" cy="324" r="15" />
+                <path class="line" d="M278 339 L284 386 M278 350 L248 365 M284 386 L266 416 M284 386 L308 414" />
+              </g>
+              <g>
+                <ellipse class="mango" cx="180" cy="339" rx="38" ry="49" transform="rotate(9 180 339)" />
+                <ellipse class="leaf" cx="204" cy="287" rx="19" ry="8" transform="rotate(-20 204 287)" />
+                <circle class="eye" cx="168" cy="339" r="4" />
+                <circle class="eye" cx="190" cy="337" r="4" />
+                <path class="mouth" d="M169 357 Q180 365 193 356" />
+              </g>
+            </svg>
+            <div class="scene-title">FAST HANDLING KEEPS IT <span class="ice">COOL</span></div>
+          </section>
+
+          <section class="scene scene-break">
+            <svg viewBox="0 0 360 520" role="img">
+              <g class="sun">
+                <circle class="heat-line" cx="274" cy="122" r="31" />
+                <path class="heat-line" d="M274 66 V42 M274 202 V178 M218 122 H194 M354 122 H330 M234 82 L216 64 M314 82 L332 64 M234 162 L216 180 M314 162 L332 180" />
+              </g>
+              <path class="soft-line" d="M67 393 H303" />
+              <g class="bad-mango">
+                <ellipse fill="#b5a745" stroke="#111417" stroke-width="4" cx="162" cy="277" rx="55" ry="68" transform="rotate(-10 162 277)" />
+                <ellipse class="leaf" cx="192" cy="207" rx="23" ry="10" transform="rotate(-20 192 207)" />
+                <circle class="eye" cx="143" cy="276" r="5" />
+                <circle class="eye" cx="176" cy="281" r="5" />
+                <path class="mouth" d="M141 312 Q161 296 183 315" />
+                <path class="heat-line" d="M101 237 C83 208 87 179 113 157" />
+                <path class="heat-line" d="M219 248 C246 217 246 185 219 161" />
+              </g>
+              <path class="heat-line" d="M236 327 L279 370 M279 327 L236 370" />
+            </svg>
+            <div class="scene-title"><span class="heat">BREAKS</span> IN THE CHAIN COST QUALITY</div>
+          </section>
+
+          <section class="scene scene-finish">
+            <svg viewBox="0 0 360 520" role="img">
+              <g class="hero-mango">
+                <ellipse class="mango" cx="180" cy="241" rx="72" ry="92" transform="rotate(10 180 241)" />
+                <ellipse class="leaf" cx="225" cy="145" rx="35" ry="15" transform="rotate(-22 225 145)" />
+                <circle class="eye" cx="155" cy="237" r="7" />
+                <circle class="eye" cx="197" cy="232" r="7" />
+                <path class="mouth" d="M157 274 Q180 291 205 270" />
+              </g>
+              <path class="ice-line cold-wave" d="M61 143 C103 112 142 146 181 117 C225 84 258 123 305 93" />
+              <path class="ice-line cold-wave" d="M50 369 C99 337 134 371 181 340 C224 311 263 343 315 311" />
+              <g class="temp-check">
+                <rect class="ice-line" x="59" y="407" width="242" height="49" rx="24" />
+                <path class="ice-line" d="M86 431 H199" />
+                <path class="ice-line" d="M225 431 l12 12 l31 -34" />
+              </g>
+            </svg>
+            <div class="scene-title"><span class="ice">TEMPERATURE CONTROLLED</span> &#10003;</div>
+          </section>
+        </div>
+      </aside>
     </main>
-    <button type="button" aria-label="Pause background animation" title="Pause background animation">&#10074;&#10074;</button>
+    <button type="button" aria-label="Pause animation" title="Pause animation">&#10074;&#10074;</button>
     <script>
-      const canvas = document.querySelector('canvas');
+      const canvas = document.querySelector('.orbital-background');
       const ctx = canvas.getContext('2d');
       const toggle = document.querySelector('button');
       let paused = false;
@@ -48,7 +497,6 @@
         const radius = Math.min(width * 0.65, height * 0.59);
         ctx.save();
         ctx.translate(width / 2, height / 2);
-        // Fine orbital tracks leave a quiet central zone for the email.
         for (let i = 0; i < 15; i++) {
           const angle = i * Math.PI / 15 + phase * (i % 2 ? 0.22 : -0.16);
           const major = radius * (0.75 + i * 0.018);
@@ -85,24 +533,28 @@
         if (ctx) ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
         draw();
       }
+
       function animate(now) {
         phase += previous ? Math.min((now - previous) / 1000, 0.05) : 0;
         previous = now;
         draw();
         frame = requestAnimationFrame(animate);
       }
+
       function syncMotion() {
         cancelAnimationFrame(frame);
         previous = 0;
+        document.body.classList.toggle('motion-paused', paused || document.hidden);
         if (!paused && !document.hidden && ctx) frame = requestAnimationFrame(animate);
         else draw();
       }
+
       addEventListener('resize', resize);
       document.addEventListener('visibilitychange', syncMotion);
       toggle.addEventListener('click', () => {
         paused = !paused;
         toggle.textContent = paused ? '\u25b6' : '\u275a\u275a';
-        toggle.title = paused ? 'Play background animation' : 'Pause background animation';
+        toggle.title = paused ? 'Play animation' : 'Pause animation';
         toggle.setAttribute('aria-label', toggle.title);
         syncMotion();
       });

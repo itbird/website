@@ -1116,6 +1116,10 @@ html&gt;body{padding:0}&lt;/style&gt;
     }
 
     #perishnet-rq-flow .form-select {
+      appearance: auto;
+      -webkit-appearance: menulist;
+      width: auto;
+      flex: 0 0 auto;
       background: var(--card);
       border: 1px solid var(--input);
       border-radius: 6px;
@@ -1154,6 +1158,14 @@ html&gt;body{padding:0}&lt;/style&gt;
 
     #perishnet-rq-flow .field input {
       min-width: 120px;
+    }
+
+    #perishnet-rq-flow .field {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      margin: 0;
+      width: auto;
     }
 
     #perishnet-rq-flow .diagram {

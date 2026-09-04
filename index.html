@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Zhong Chen</title>
     <style>
-      body { margin: 0; background: #fff; font-family: Arial, Helvetica, sans-serif; }
+      body { margin: 0; background: #080b0d; font-family: Arial, Helvetica, sans-serif; }
+      canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
       main {
+        position: relative;
         display: grid;
         min-height: 100vh;
         min-height: 100svh;
@@ -15,19 +17,88 @@
         box-sizing: border-box;
       }
       a {
-        color: #222;
+        color: #f0f7f5;
         font-size: 20px;
         line-height: 1.5;
         overflow-wrap: anywhere;
         text-underline-offset: 4px;
+        text-shadow: 0 2px 12px #080b0d, 0 0 24px #080b0d;
       }
-      a:hover { color: #006b59; }
-      a:focus-visible { outline: 2px solid #006b59; outline-offset: 6px; }
+      a:hover { color: #89ead3; }
+      a:focus-visible { outline: 2px solid #89ead3; outline-offset: 6px; }
     </style>
   </head>
   <body>
+    <canvas aria-hidden="true"></canvas>
     <main>
       <a href="mailto:zhong@zhongchen.ai">zhong@zhongchen.ai</a>
     </main>
+    <script>
+      const canvas = document.querySelector('canvas');
+      const ctx = canvas.getContext('2d');
+      const motion = matchMedia('(prefers-reduced-motion: reduce)');
+      let width = 0, height = 0, phase = 0, previous = 0, frame = 0;
+
+      function draw() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, width, height);
+        const radius = Math.min(width * 0.65, height * 0.59);
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        // Fine orbital tracks leave a quiet central zone for the email.
+        for (let i = 0; i < 15; i++) {
+          const angle = i * Math.PI / 15 + phase * (i % 2 ? 0.07 : -0.05);
+          const major = radius * (0.75 + i * 0.018);
+          const minor = radius * (0.29 + (i % 4) * 0.035);
+          ctx.save();
+          ctx.rotate(angle);
+          ctx.strokeStyle = i % 3 ? 'rgba(84,205,189,0.18)' : 'rgba(212,224,237,0.16)';
+          ctx.lineWidth = 0.7;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, major, minor, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          const travel = phase * 0.15 + i * 2.4;
+          ctx.fillStyle = i % 3 ? 'rgba(130,234,211,0.65)' : 'rgba(236,202,145,0.65)';
+          ctx.beginPath();
+          ctx.arc(Math.cos(travel) * major, Math.sin(travel) * minor, 1.7, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        ctx.restore();
+        const shade = ctx.createRadialGradient(width / 2, height / 2, 15, width / 2, height / 2, Math.max(180, radius * 0.55));
+        shade.addColorStop(0, '#080b0d');
+        shade.addColorStop(0.5, 'rgba(8,11,13,0.96)');
+        shade.addColorStop(1, 'rgba(8,11,13,0)');
+        ctx.fillStyle = shade;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      function resize() {
+        width = innerWidth;
+        height = innerHeight;
+        const ratio = Math.min(devicePixelRatio || 1, 2);
+        canvas.width = Math.round(width * ratio);
+        canvas.height = Math.round(height * ratio);
+        if (ctx) ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        draw();
+      }
+      function animate(now) {
+        phase += previous ? Math.min((now - previous) / 1000, 0.05) : 0;
+        previous = now;
+        draw();
+        frame = requestAnimationFrame(animate);
+      }
+      function syncMotion() {
+        cancelAnimationFrame(frame);
+        previous = 0;
+        if (!motion.matches && !document.hidden && ctx) frame = requestAnimationFrame(animate);
+        else draw();
+      }
+      addEventListener('resize', resize);
+      document.addEventListener('visibilitychange', syncMotion);
+      motion.addEventListener('change', syncMotion);
+      resize();
+      syncMotion();
+    </script>
   </body>
 </html>

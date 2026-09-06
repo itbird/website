@@ -8,9 +8,14 @@ const contextCards = [
 ];
 if ($('#context-number')) {
  let contextIndex=0;
+ let contextTimer;
  const showContext=()=>{const c=contextCards[contextIndex];$('#context-lede').textContent=c.lede;$('#context-number').textContent=c.number;$('#context-tail').textContent=c.tail;$('#context-source').href=c.url;$('#context-source').firstChild.textContent=c.source;$('#context-note').textContent=c.note;};
+ const restartContextTimer=()=>{window.clearInterval(contextTimer);contextTimer=window.setInterval(()=>{contextIndex=(contextIndex+1)%contextCards.length;showContext();},8000);};
+ const moveContext=step=>{contextIndex=(contextIndex+step+contextCards.length)%contextCards.length;showContext();restartContextTimer();};
+ $('#context-prev').addEventListener('click',()=>moveContext(-1));
+ $('#context-next').addEventListener('click',()=>moveContext(1));
  showContext();
- window.setInterval(()=>{contextIndex=(contextIndex+1)%contextCards.length;showContext();},8000);
+ restartContextTimer();
 }
 function el(name, attrs, parent, text) { const n=document.createElementNS(svg,name); for(const [k,v] of Object.entries(attrs)) n.setAttribute(k,v); if(text!==undefined)n.textContent=text; parent.append(n); return n; }
 function chart(root,maxX,unit) {

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" fill="none">
+  <!-- Decorative semantic motifs, not a published research ontology. -->
+  <defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L7 4L1 7" fill="none" stroke="#66826a"/></marker></defs>
+  <g stroke="#66826a" stroke-width="1.1">
+    <!-- Class hierarchy: specific food types point to their parent class. -->
+    <rect x="75" y="90" width="130" height="34" rx="5"/>
+    <rect x="18" y="188" width="82" height="30" rx="5"/><rect x="159" y="188" width="94" height="30" rx="5"/>
+    <path d="M59 188V155H140V124M206 188V155H140" marker-end="url(#arrow)"/>
+    <rect x="14" y="287" width="86" height="30" rx="15"/>
+    <path d="M57 287V218" stroke-dasharray="4 5" marker-end="url(#arrow)"/>
+    <!-- Linked observations, events and shipments. -->
+    <circle cx="1026" cy="138" r="31"/><circle cx="1124" cy="232" r="29"/><circle cx="985" cy="330" r="32"/>
+    <path d="M1049 159L1103 210M1098 249L1013 312" marker-end="url(#arrow)"/>
+    <path d="M1012 310L1160 380" stroke-dasharray="4 6"/>
+    <circle cx="1167" cy="384" r="7"/>
+    <!-- Small graph with two clusters and a bridging relationship. -->
+    <path d="M21 602L81 563L147 596L123 663L49 684L21 602M81 563L77 626L147 596M77 626L49 684M77 626L123 663M147 596L223 559L263 595L233 645L147 596"/>
+    <circle cx="21" cy="602" r="5"/><circle cx="81" cy="563" r="5"/><circle cx="147" cy="596" r="6"/><circle cx="123" cy="663" r="5"/><circle cx="49" cy="684" r="5"/><circle cx="77" cy="626" r="8"/><circle cx="223" cy="559" r="4"/><circle cx="263" cy="595" r="4"/><circle cx="233" cy="645" r="4"/>
+    <!-- Leaf outline with connected evidence nodes. -->
+    <path d="M1080 538C973 517 929 595 954 672C1036 698 1110 638 1080 538Z"/>
+    <path d="M939 695L1058 559M974 653L974 603L1020 586M994 630L1044 630L1065 594"/>
+    <circle cx="974" cy="653" r="4"/><circle cx="974" cy="603" r="4"/><circle cx="1020" cy="586" r="4"/><circle cx="1044" cy="630" r="4"/><circle cx="1058" cy="559" r="4"/>
+    <!-- Perception, connected evidence and inference. -->
+    <path d="M289 798H369L408 778H484M538 778H637M699 778H795L838 798H907" marker-end="url(#arrow)"/>
+    <path d="M319 766L330 766L339 751L349 781L360 761L375 761"/>
+    <path d="M488 778L513 756L538 778L513 800Z M513 756V800"/>
+    <circle cx="488" cy="778" r="3"/><circle cx="513" cy="756" r="3"/><circle cx="538" cy="778" r="3"/><circle cx="513" cy="800" r="3"/>
+    <path d="M650 762H678V791H650Z M657 777L665 785L677 767"/>
+  </g>
+  <g fill="#66826a" font-family="Segoe UI,Arial,sans-serif" font-size="11" text-anchor="middle">
+    <text x="140" y="111">Perishable food</text><text x="59" y="207">Fruit</text><text x="206" y="207">Vegetable</text><text x="57" y="306">Mango</text>
+    <text x="140" y="146" font-size="9">subclass of</text><text x="80" y="255" font-size="9">is a</text>
+    <text x="1026" y="142">Shipment</text><text x="1124" y="236">Event</text><text x="985" y="328">Temperature</text><text x="985" y="342">observation</text>
+    <text x="1095" y="176" font-size="9">has event</text><text x="1073" y="297" font-size="9">has observation</text>
+    <text x="345" y="836" letter-spacing="2">SENSE</text><text x="513" y="836" letter-spacing="2">CONNECT</text><text x="667" y="836" letter-spacing="2">INFER</text>
+    <text x="140" y="62" font-size="12" letter-spacing="2">ONTOLOGY</text><text x="134" y="720" font-size="12" letter-spacing="2">KNOWLEDGE GRAPH</text>
+  </g>
+  <g stroke="#b79150" stroke-width="1.3"><circle cx="77" cy="626" r="2"/><circle cx="1026" cy="138" r="37" stroke-dasharray="2 7"/><path d="M1120 463V483M1110 473H1130M286 390V402M280 396H292"/></g>
+</svg>

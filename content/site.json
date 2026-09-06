@@ -1,0 +1,19 @@
+{
+  "name": "Zhong Chen",
+  "description": "Zhong Chen, a PhD researcher in Australia, explores AI, knowledge graphs and cold-chain monitoring for food waste prevention. Try interactive experiments.",
+  "email": "zhong@zhongchen.ai",
+  "github": "https://github.com/itbird",
+  "linkedin": "https://au.linkedin.com/in/itbird",
+  "scholar": "",
+  "orcid": "",
+  "academic": {
+    "publications": false,
+    "talks": false,
+    "teaching": false,
+    "activities": false,
+    "cv": false
+  },
+  "notesEnabled": false,
+  "url": "https://zhongchen.ai",
+  "title": "Zhong Chen | AI for Food Waste Prevention"
+}

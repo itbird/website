@@ -1,6 +1,17 @@
 import {journey, samples, temperature, intervals, annualSaved} from './models.mjs';
 const $ = s => document.querySelector(s);
 const svg = 'http://www.w3.org/2000/svg';
+const contextCards = [
+ {lede:'In 2022, ',number:'1.05 billion tonnes',tail:' of food waste were generated worldwide.',source:'UNEP, 2024 ↗',note:'Retail, food service & households; includes inedible parts.',url:'https://www.unep.org/news-and-stories/press-release/world-squanders-over-1-billion-meals-day-un-report'},
+ {lede:'Australia wastes around ',number:'7.6 million tonnes',tail:' of food each year.',source:'DCCEEW, 2025 ↗',note:'Estimate from the National Food Waste Strategy Feasibility Study.',url:'https://www.dcceew.gov.au/environment/protection/waste/food-waste'},
+ {lede:'Globally, about ',number:'19% of food',tail:' available to consumers was wasted in 2022.',source:'UNEP Food Waste Index ↗',note:'Retail, food service & households; the estimate includes inedible parts.',url:'https://www.unep.org/resources/publication/food-waste-index-report-2024'}
+];
+if ($('#context-number')) {
+ let contextIndex=0;
+ const showContext=()=>{const c=contextCards[contextIndex];$('#context-lede').textContent=c.lede;$('#context-number').textContent=c.number;$('#context-tail').textContent=c.tail;$('#context-source').href=c.url;$('#context-source').firstChild.textContent=c.source;$('#context-note').textContent=c.note;};
+ showContext();
+ window.setInterval(()=>{contextIndex=(contextIndex+1)%contextCards.length;showContext();},8000);
+}
 function el(name, attrs, parent, text) { const n=document.createElementNS(svg,name); for(const [k,v] of Object.entries(attrs)) n.setAttribute(k,v); if(text!==undefined)n.textContent=text; parent.append(n); return n; }
 function chart(root,maxX,unit) {
   root.replaceChildren(); const x=t=>48+t/maxX*530, y=t=>220-t/20*195;

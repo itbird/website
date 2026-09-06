@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /studio
+Disallow: /api/
+Disallow: /preview/
+
+Sitemap: https://zhongchen.ai/sitemap.xml

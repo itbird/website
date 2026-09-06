@@ -25,7 +25,7 @@ npm run build
 npm test
 ```
 
-`npm start` 提供网站及本地管理端；`npm run build` 只生成静态网站。部署目录为 `dist`，不是整个代码仓库。根目录 `index.html` 是模板，请通过本地服务预览，不要双击模板或直接上传模板。以前的首页保留在 Git 历史中；原有 draft 文件和 draft.zip 未改动。
+`npm start` 提供网站及本地管理端；`npm run build` 只生成静态网站。部署目录为 `dist`，不是整个代码仓库。首页模板保存在 `src/home.html`；根目录 `index.html` 是构建生成的成品页面，可供现有零构建静态部署直接发布。以前的首页保留在 Git 历史中；原有 draft 文件和 draft.zip 未改动。
 
 本地文件位置：
 
@@ -34,7 +34,8 @@ npm test
 - `assets/uploads`：上传的实际图片文件。
 - `content/site.json`：社交链接与学术栏目开关。
 - `content/academic.json`：未来学术条目。
-- `index.html`：首页模板；`src`：样式、交互和透明的演示计算。
+- `src/home.html`：首页模板；`src`：样式、交互和透明的演示计算。
+- 根目录 `index.html`、`assets/style.css`、`assets/app.js`、`assets/models.mjs`、`robots.txt`、`sitemap.xml`、`404.html`：自动同步生成的可发布文件。
 - `scripts`：静态生成与本地管理服务；`studio`：管理界面。
 - `dist`：可部署的生成结果，不纳入 Git。
 
@@ -62,7 +63,7 @@ npm test
 
 Cloudflare 默认安装 package.json 中的依赖；请同时提交 package-lock.json。若现有配置显式关闭了自动依赖安装，构建命令改用 `npm ci && npm run build`。若项目已有 NODE_VERSION 环境变量，确认它同样为 22，以免覆盖文件设置。
 
-本次只修改了本地文件，没有访问或修改 Cloudflare 后台，也没有推送 GitHub。请先保存上表设置，再推送新版源码；否则原来的“直接发布仓库根目录”配置会发布尚未生成的模板。
+本次只修改了本地文件，没有访问或修改 Cloudflare 后台，也没有推送 GitHub。请先保存上表设置，再推送新版源码；现在也兼容原来的“直接发布仓库根目录”配置，根目录包含完整成品。
 
 提交源码包括：根目录模板、`.node-version`、`.gitignore`、package.json、package-lock.json，以及 assets、content、src、scripts、studio 等目录。不要只上传 index.html。node_modules、dist 和测试临时目录已在 .gitignore 中排除。Cloudflare 会自行生成 dist，不需要手动上传它。
 
@@ -101,3 +102,7 @@ Cloudflare 默认安装 package.json 中的依赖；请同时提交 package-lock
 首页标题、描述和正式域名来自 content/site.json。构建时自动生成 canonical、Person / WebSite / WebPage 结构化数据，以及 robots.txt、sitemap.xml。站点地图只包含首页和实际公开的文章；Notes 关闭时不会列入任何文章。文章重启后自动生成独立 canonical 与 BlogPosting 元数据。管理端、草稿预览和 404 页面设置 noindex。无虚构论文、机构背书或专家头衔。
 
 部署成功后，在 Google Search Console 中验证 zhongchen.ai 的所有权，提交 https://zhongchen.ai/sitemap.xml，并检查首页索引情况。这是独立的线上步骤，目前未执行；SEO 配置不等于已被收录或保证排名。
+
+## 现有零构建部署兼容
+
+每次本地管理端保存或 npm run build 时，同时生成 dist 和根目录发布文件。请一并提交生成文件，再推送；现有 Cloudflare 无需先改构建设置就能发布。根目录页面与 dist 保持一致。不要手工编辑生成文件，应编辑 src/home.html / src/style.css 等源文件。保留 dist 方式以便未来切换。`.root-pages.json` 仅追踪生成的文章页面，关闭 Notes 时会清除对应的成品页面，不会改动 draft 目录。

@@ -7,6 +7,14 @@ retrospective of verified flow commits, not a complete website release history.
 Times below are Git commit times in Australia/Sydney (UTC+10 for these dates),
 not confirmed deployment times. Earlier small changes retained version 1.8.
 
+## 1.9.1 - 2026-09-08 20:46 +10:00
+
+- Fixed: Method highlighting ran outside drawJourney and referenced local
+  variables remaining/active, stopping initialization with a ReferenceError.
+  Move it into the animation function so controls and motion can initialize.
+- Verification: NUC browser showed changing traveller coordinates and a working
+  pause control. Upload hash and served HTTP content were verified.
+
 ## 1.9 - 2026-09-08 20:39:25 +10:00
 
 Commit: `23cddcd`

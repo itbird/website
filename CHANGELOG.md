@@ -60,6 +60,15 @@ Commit: `862aa9f`
 
 ## Recording future updates
 
+### Deployment follow-up - 2026-09-08 20:44 +10:00
+
+- Synchronized version 1.9 to the NUC Streamlit static endpoint, which had
+  remained on 1.8. Backed up the previous file before replacement.
+- Verified SHA256 of the upload and exact HTTP response content against
+  `draft/flow.html`. No service restart was required.
+- Added `scripts/sync-flow-nuc.ps1` and `AGENTS.md` to require NUC synchronization
+  and separate deployment verification for subsequent flow changes.
+
 For each subsequent flow update, add an entry in the same commit:
 
 - Version and actual local change time, including timezone.

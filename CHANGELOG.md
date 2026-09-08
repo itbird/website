@@ -9,6 +9,12 @@ not confirmed deployment times. Earlier small changes retained version 1.8.
 
 ## 1.9.2 - 2026-09-08 20:51 +10:00
 
+NUC deployment follow-up: restored Home and Cloudflare Access sign-out links
+from the previous NUC wrapper. The sync script now adds a version-controlled
+navigation template to every NUC release. Research content remains 1.9.2.
+Sign-out is the existing Cloudflare Access endpoint; direct IP access does not
+provide that authentication endpoint.
+
 - Changed: Research aim explicitly states development and evaluation of an
   ontology-based framework for event-driven degradation assessment and
   waste-aware decision support. Supporting text retains intervention windows.

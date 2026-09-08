@@ -7,7 +7,8 @@ For every change to `draft/flow.html`:
 2. Update the visible version, actual modification time and CHANGELOG.md.
 3. Check JavaScript syntax and the affected visual behavior.
 4. Run `powershell -NoProfile -File scripts/sync-flow-nuc.ps1` from this repo.
-   It backs up the NUC copy, verifies the upload hash and checks served content.
+   It adds scripts/nuc-flow-navigation.html to preserve the NUC Home/sign-out
+   controls, backs up the NUC copy, verifies the upload hash and checks served content.
 5. Commit and push the website and release notes. Verify the website deployment
    separately; a successful Git push does not confirm a live deployment.
 6. Report GitHub/site and NUC status separately. If either fails, report the

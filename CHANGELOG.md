@@ -7,6 +7,14 @@ retrospective of verified flow commits, not a complete website release history.
 Times below are Git commit times in Australia/Sydney (UTC+10 for these dates),
 not confirmed deployment times. Earlier small changes retained version 1.8.
 
+## 1.9.2 - 2026-09-08 20:51 +10:00
+
+- Changed: Research aim explicitly states development and evaluation of an
+  ontology-based framework for event-driven degradation assessment and
+  waste-aware decision support. Supporting text retains intervention windows.
+- Reason: Align the headline with the agreed scope of all three RQs.
+- Verification: Text-only update; NUC upload and served-content checks passed.
+
 ## 1.9.1 - 2026-09-08 20:46 +10:00
 
 - Fixed: Method highlighting ran outside drawJourney and referenced local
